@@ -10,7 +10,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Text('hello contact app!!!'),
+      home: Center(
+        child: Container(width: 200, height: 400, color: Colors.cyan),
+      )
     );
   }
 }
