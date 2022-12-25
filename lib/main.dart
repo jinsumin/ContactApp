@@ -20,7 +20,6 @@ class MainNavigation extends StatefulWidget {
 
 class _MainNavigationState extends State<MainNavigation> {
   int currentPageIndex = 0;
-  int count = 0;
 
   var name = [
     '김길동',
@@ -41,11 +40,13 @@ class _MainNavigationState extends State<MainNavigation> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        child: Text('$count'),
+        child: Text('D'),
         onPressed: () {
-          setState(() {
-            count++;
-          });
+          showDialog(
+              context: context,
+              builder: (context) {
+                return DialogUI(state: 'testState');
+              });
         },
       ),
       appBar: AppBar(
@@ -99,7 +100,8 @@ class _MainNavigationState extends State<MainNavigation> {
                 return ListTile(
                   leading: ClipRRect(
                     borderRadius: BorderRadius.circular(30),
-                    child: Image.asset('assets/sangsangin_logo.png', height: 50),
+                    child:
+                        Image.asset('assets/sangsangin_logo.png', height: 50),
                   ),
                   title: Text("${name[index]} ${like[index]}"),
                   trailing: ElevatedButton(
@@ -115,5 +117,28 @@ class _MainNavigationState extends State<MainNavigation> {
             )),
       ][currentPageIndex],
     );
+  }
+}
+
+class DialogUI extends StatelessWidget {
+  const DialogUI({Key? key, this.state}) : super(key: key);
+  final state;
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+        child: SizedBox(
+            width: 300,
+            height: 250,
+            child: Column(children: [
+              TextField(),
+              TextButton(child: Text(state), onPressed: () {}),
+              TextButton(
+                child: Text('취소'),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              )
+            ])));
   }
 }
