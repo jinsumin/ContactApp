@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:contacts_service/contacts_service.dart';
 
 void main() => runApp(const MyApp());
 
@@ -20,17 +21,30 @@ class MainNavigation extends StatefulWidget {
 }
 
 class _MainNavigationState extends State<MainNavigation> {
+  getPermission() async {
+    var status = await Permission.contacts.status;
+    if (status.isGranted) {
+      print('permission granted!');
+      var contacts = await ContactsService.getContacts();
+      print(contacts);
+      name = contacts;
+      print(name[0].givenName);
+      setState(() {
+        total = contacts.length;
+      });
+    } else if (status.isDenied) {
+      print('permission denied..');
+      Permission.contacts.request();
+      openAppSettings();
+    }
+  }
+
   int currentPageIndex = 0;
 
-  var name = [
-    '김길동',
-    '이길동',
-    '박길동',
-    '홍길동',
-  ];
-  var like = [0, 0, 0, 0];
+  var name = [];
+  // var like = [0, 0, 0, 0];
 
-  int total = 4;
+  int total = 0;
 
   addOne() {
     setState(() {
@@ -38,10 +52,10 @@ class _MainNavigationState extends State<MainNavigation> {
     });
   }
 
-  addName(text) {
+  addName(newContact) {
     setState(() {
-      name.add(text);
-      like.add(0);
+      name.add(newContact);
+      // like.add(0);
     });
   }
 
@@ -61,11 +75,18 @@ class _MainNavigationState extends State<MainNavigation> {
       appBar: AppBar(
         leading: Image.asset('assets/sangsangin_logo.png'),
         backgroundColor: Color.fromRGBO(0, 167, 167, 1),
-        title: Text('Demo Contact App $total',
+        title: Text('Total Friends : $total',
             style: TextStyle(
                 color: Colors.black,
                 fontSize: 20,
                 fontWeight: FontWeight.w400)),
+        actions: [
+          IconButton(
+              onPressed: () {
+                getPermission();
+              },
+              icon: Icon(Icons.contacts))
+        ],
       ),
       bottomNavigationBar: NavigationBar(
         onDestinationSelected: (int index) {
@@ -112,12 +133,12 @@ class _MainNavigationState extends State<MainNavigation> {
                     child:
                         Image.asset('assets/sangsangin_logo.png', height: 50),
                   ),
-                  title: Text("${name[index]} ${like[index]}"),
+                  title: Text(name[index].givenName ?? "이름없음"),
                   trailing: ElevatedButton(
                     child: Text('좋아요'),
                     onPressed: () {
                       setState(() {
-                        like[index]++;
+                        // like[index]++;
                       });
                     },
                   ),
@@ -142,12 +163,17 @@ class DialogUI extends StatelessWidget {
             width: 300,
             height: 250,
             child: Column(children: [
-              TextField(controller: inputData,),
+              TextField(
+                controller: inputData,
+              ),
               TextButton(
                   child: Text('등록'),
                   onPressed: () {
+                    var newContact = Contact();
+                    newContact.givenName = inputData.text;
+                    ContactsService.addContact(newContact);
+                    addName(newContact);
                     addOne();
-                    addName(inputData.text);
                     Navigator.pop(context);
                   }),
               TextButton(
