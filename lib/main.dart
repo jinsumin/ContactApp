@@ -20,12 +20,18 @@ class MainNavigation extends StatefulWidget {
 
 class _MainNavigationState extends State<MainNavigation> {
   int currentPageIndex = 0;
+  int count = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        child: Text('+'),
+        onPressed: () {},
+      ),
       appBar: AppBar(
-        backgroundColor: Colors.cyan,
+        leading: Image.asset('assets/sangsangin_logo.png'),
+        backgroundColor: Color.fromRGBO(0, 167, 167, 1),
         title: Text('Demo Contact App',
             style: TextStyle(
                 color: Colors.black,
@@ -66,10 +72,20 @@ class _MainNavigationState extends State<MainNavigation> {
           child: const Text('Page 2'),
         ),
         Container(
-          color: Colors.blue,
-          alignment: Alignment.center,
-          child: const Text('Page 3'),
-        ),
+            color: Colors.blue,
+            alignment: Alignment.center,
+            child: ListView.builder(
+              itemCount: 100,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  leading: ClipRRect(
+                    borderRadius: BorderRadius.circular(30),
+                    child: Image.asset('assets/sangsangin_logo.png'),
+                  ),
+                  title: Text('홍길동 $index'),
+                );
+              },
+            )),
       ][currentPageIndex],
     );
   }
