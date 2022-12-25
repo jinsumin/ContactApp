@@ -22,12 +22,31 @@ class _MainNavigationState extends State<MainNavigation> {
   int currentPageIndex = 0;
   int count = 0;
 
+  var name = [
+    '김길동',
+    '이길동',
+    '박길동',
+    '홍길동',
+    '건길동',
+    '구길동',
+    '진길동',
+    '추길동',
+    '우길동',
+    '이길동',
+    '박길동'
+  ];
+  var like = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        child: Text('+'),
-        onPressed: () {},
+        child: Text('$count'),
+        onPressed: () {
+          setState(() {
+            count++;
+          });
+        },
       ),
       appBar: AppBar(
         leading: Image.asset('assets/sangsangin_logo.png'),
@@ -75,14 +94,22 @@ class _MainNavigationState extends State<MainNavigation> {
             color: Colors.blue,
             alignment: Alignment.center,
             child: ListView.builder(
-              itemCount: 100,
+              itemCount: name.length,
               itemBuilder: (context, index) {
                 return ListTile(
                   leading: ClipRRect(
                     borderRadius: BorderRadius.circular(30),
-                    child: Image.asset('assets/sangsangin_logo.png'),
+                    child: Image.asset('assets/sangsangin_logo.png', height: 50),
                   ),
-                  title: Text('홍길동 $index'),
+                  title: Text("${name[index]} ${like[index]}"),
+                  trailing: ElevatedButton(
+                    child: Text('좋아요'),
+                    onPressed: () {
+                      setState(() {
+                        like[index]++;
+                      });
+                    },
+                  ),
                 );
               },
             )),
