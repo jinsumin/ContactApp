@@ -26,33 +26,41 @@ class _MainNavigationState extends State<MainNavigation> {
     '이길동',
     '박길동',
     '홍길동',
-    '건길동',
-    '구길동',
-    '진길동',
-    '추길동',
-    '우길동',
-    '이길동',
-    '박길동'
   ];
-  var like = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  var like = [0, 0, 0, 0];
+
+  int total = 4;
+
+  addOne() {
+    setState(() {
+      total++;
+    });
+  }
+
+  addName(text) {
+    setState(() {
+      name.add(text);
+      like.add(0);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        child: Text('D'),
+        child: Text('+'),
         onPressed: () {
           showDialog(
               context: context,
               builder: (context) {
-                return DialogUI(state: 'testState');
+                return DialogUI(addOne: addOne, addName: addName);
               });
         },
       ),
       appBar: AppBar(
         leading: Image.asset('assets/sangsangin_logo.png'),
         backgroundColor: Color.fromRGBO(0, 167, 167, 1),
-        title: Text('Demo Contact App',
+        title: Text('Demo Contact App $total',
             style: TextStyle(
                 color: Colors.black,
                 fontSize: 20,
@@ -92,7 +100,7 @@ class _MainNavigationState extends State<MainNavigation> {
           child: const Text('Page 2'),
         ),
         Container(
-            color: Colors.blue,
+            color: Colors.white38,
             alignment: Alignment.center,
             child: ListView.builder(
               itemCount: name.length,
@@ -121,8 +129,10 @@ class _MainNavigationState extends State<MainNavigation> {
 }
 
 class DialogUI extends StatelessWidget {
-  const DialogUI({Key? key, this.state}) : super(key: key);
-  final state;
+  DialogUI({Key? key, this.addOne, this.addName}) : super(key: key);
+  final addOne;
+  final addName;
+  var inputData = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -131,8 +141,14 @@ class DialogUI extends StatelessWidget {
             width: 300,
             height: 250,
             child: Column(children: [
-              TextField(),
-              TextButton(child: Text(state), onPressed: () {}),
+              TextField(controller: inputData,),
+              TextButton(
+                  child: Text('등록'),
+                  onPressed: () {
+                    addOne();
+                    addName(inputData.text);
+                    Navigator.pop(context);
+                  }),
               TextButton(
                 child: Text('취소'),
                 onPressed: () {
